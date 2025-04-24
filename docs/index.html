@@ -4,48 +4,96 @@
   <meta charset="UTF-8" />
   <title>재채기하는 스마일 🤧</title>
   <style>
-    body {
+    * {
       margin: 0;
-      font-family: sans-serif;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    body {
+      font-family: 'Apple SD Gothic Neo', 'Noto Sans KR', sans-serif;
+      background-color: #f9f9f9;
+      color: #222;
       text-align: center;
-      background-color: white;
+      height: 100vh;
       overflow: hidden;
     }
-    .hidden { display: none; }
-    .center { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); }
 
-    #smile { font-size: 80px; cursor: pointer; }
-    #penguin { font-size: 40px; position: absolute; bottom: 10px; left: 10px; display: none; }
-    .bubble { position: absolute; bottom: 80px; left: 60px; background: white; border: 2px solid #ccc; border-radius: 10px; padding: 10px; }
+    .center {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+    }
+
+    .btn {
+      background-color: #007aff;
+      color: white;
+      border: none;
+      padding: 12px 20px;
+      border-radius: 12px;
+      font-size: 16px;
+      margin: 10px;
+      cursor: pointer;
+      transition: background 0.3s;
+    }
+    .btn:hover {
+      background-color: #005bbb;
+    }
+
+    #smile {
+      font-size: 90px;
+      margin-bottom: 30px;
+      cursor: pointer;
+      transition: transform 0.2s;
+    }
+    #smile:active {
+      transform: scale(1.1);
+    }
+
+    .bubble {
+      position: absolute;
+      bottom: 90px;
+      left: 80px;
+      background: white;
+      border: 1px solid #ddd;
+      border-radius: 12px;
+      padding: 8px 12px;
+      font-size: 14px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+    }
 
     .airplane-scene {
+      width: 100vw;
+      height: 100vh;
       background: white;
-      position: absolute;
-      width: 100%;
-      height: 100%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
     }
+
     .window-view {
-      width: 300px;
-      height: 200px;
+      width: 280px;
+      height: 180px;
       border-radius: 20px;
       overflow: hidden;
-      margin: 50px auto 10px;
-      background: white;
-      box-shadow: 0 0 20px rgba(0,0,0,0.2);
+      background: #fff;
+      box-shadow: 0 4px 16px rgba(0,0,0,0.1);
+      margin-bottom: 20px;
     }
+
     .window-view img {
       width: 100%;
       height: 100%;
       object-fit: cover;
     }
+
     .flight-status {
-      margin: 10px;
-      font-size: 18px;
+      font-size: 16px;
+      color: #555;
+      margin-bottom: 20px;
     }
 
-    .btn { margin: 10px; padding: 10px 20px; font-size: 16px; cursor: pointer; }
-
-    /* 기내식 UI */
     .hand {
       font-size: 40px;
       position: absolute;
@@ -64,12 +112,11 @@
     <button id="hawaiiButton" class="btn">따뜻하게 해줘</button>
   </div>
 
-  <div id="penguin">🐧</div>
-  <div class="bubble hidden" id="penguinTalk">조심해~ 감기 걸려~</div>
+  <div id="penguin" style="display: none; position: absolute; bottom: 20px; left: 20px; font-size: 40px;">🐧</div>
+  <div class="bubble" id="penguinTalk" style="display: none;">조심해~ 감기 걸려~</div>
 
   <script>
     let sneezeCount = 0;
-    let antarcticaModeActive = false;
 
     const smile = document.getElementById('smile');
     const sneezeBtn = document.getElementById('sneezeButton');
@@ -83,15 +130,16 @@
       setTimeout(() => smile.textContent = '😊', 300);
       sneezeCount++;
 
-      let snow = document.createElement('div');
+      const snow = document.createElement('div');
       snow.textContent = '❄️';
       snow.style.position = 'absolute';
       snow.style.left = Math.random() * window.innerWidth + 'px';
       snow.style.top = '0px';
+      snow.style.fontSize = '24px';
       document.body.appendChild(snow);
 
-      let fall = setInterval(() => {
-        snow.style.top = (parseInt(snow.style.top) + 5) + 'px';
+      const fall = setInterval(() => {
+        snow.style.top = (parseInt(snow.style.top) + 4) + 'px';
         if (parseInt(snow.style.top) > window.innerHeight) {
           clearInterval(fall);
           snow.remove();
@@ -99,10 +147,10 @@
       }, 30);
 
       penguin.style.display = 'block';
-      penguinTalk.classList.remove('hidden');
+      penguinTalk.style.display = 'block';
       setTimeout(() => {
         penguin.style.display = 'none';
-        penguinTalk.classList.add('hidden');
+        penguinTalk.style.display = 'none';
       }, 1500);
     }
 
@@ -113,12 +161,12 @@
     function goToHawaii() {
       clearScreen();
 
-      const airplaneScene = document.createElement('div');
-      airplaneScene.className = 'airplane-scene';
+      const scene = document.createElement('div');
+      scene.className = 'airplane-scene';
 
       const windowView = document.createElement('div');
       windowView.className = 'window-view';
-      windowView.innerHTML = `<img src="sky.jpeg" alt="하늘">`;
+      windowView.innerHTML = `<img src="sky.jpeg" alt="sky view">`;
 
       const flightStatus = document.createElement('div');
       flightStatus.className = 'flight-status';
@@ -128,6 +176,22 @@
       mealBtn.textContent = '기내식 선택하기 🍱';
       mealBtn.className = 'btn';
 
+      scene.appendChild(windowView);
+      scene.appendChild(flightStatus);
+      scene.appendChild(mealBtn);
+      document.body.appendChild(scene);
+
+      let time = 0;
+      const timer = setInterval(() => {
+        time += 10;
+        flightStatus.textContent = `${time}s 가상 비행 중...`;
+      }, 1000);
+
+      setTimeout(() => {
+        clearInterval(timer);
+        eatMeal('비빔밥 🥘');
+      }, 6000);
+
       mealBtn.onclick = () => {
         const modal = document.createElement('div');
         modal.style.position = 'fixed';
@@ -136,8 +200,8 @@
         modal.style.transform = 'translate(-50%, -50%)';
         modal.style.background = '#fff';
         modal.style.padding = '20px';
-        modal.style.border = '2px solid #ccc';
-        modal.style.borderRadius = '10px';
+        modal.style.borderRadius = '12px';
+        modal.style.boxShadow = '0 4px 12px rgba(0,0,0,0.2)';
         modal.innerHTML = `
           <div style="margin-bottom:10px;">기내식 선택:</div>
           <button class="btn" onclick="eatMeal('김밥 🍙')">김밥 🍙</button>
@@ -146,65 +210,6 @@
         `;
         document.body.appendChild(modal);
       };
-
-      airplaneScene.appendChild(windowView);
-      airplaneScene.appendChild(flightStatus);
-      airplaneScene.appendChild(mealBtn);
-      document.body.appendChild(airplaneScene);
-
-      let virtualTime = 0;
-      const timer = setInterval(() => {
-        virtualTime += 10;
-        flightStatus.textContent = `${virtualTime}s 가상 비행 중...`;
-      }, 1000);
-
-      setTimeout(() => {
-        clearInterval(timer);
-        document.body.innerHTML = '';
-        showHawaiiGame();
-      }, 7000);
-    }
-
-    function showHawaiiGame() {
-      document.body.className = 'hawaii';
-
-      const gameArea = document.createElement('div');
-      gameArea.className = 'game-area center';
-      gameArea.innerHTML = `
-        <div class="game-message">코코넛 따기!! 🥥</div>
-        <div class="palm-tree" id="palmTree">🌴</div>
-        <div class="coconut" id="coconut">🥥</div>
-        <button class="btn" onclick="alert('시원하게 마셨다~ 🥥')">코코넛 마시기</button>
-        <button class="btn" onclick="location.reload()">나가기</button>
-      `;
-      document.body.appendChild(gameArea);
-
-      const palmTree = document.getElementById('palmTree');
-      const coconut = document.getElementById('coconut');
-
-      palmTree.addEventListener('mousedown', () => {
-        coconut.style.top = '100px';
-        coconut.style.opacity = '1';
-      });
-    }
-
-    function goToAntarctica() {
-      if (antarcticaModeActive) return;
-      antarcticaModeActive = true;
-
-      clearScreen();
-
-      document.body.className = 'antarctica';
-
-      const gameArea = document.createElement('div');
-      gameArea.className = 'game-area center';
-      gameArea.innerHTML = `
-        <div class="game-message">눈 굴리기! ❄️</div>
-        <div class="snowball" id="snowball" style="width:50px;height:50px;background:#ddd;border-radius:50%;margin:0 auto;"></div>
-        <button class="btn" onclick="alert('눈사람 완성! ⛄')">눈사람 만들기</button>
-        <button class="btn" onclick="location.reload()">나가기</button>
-      `;
-      document.body.appendChild(gameArea);
     }
 
     function eatMeal(menu) {
@@ -213,7 +218,7 @@
       const tray = document.createElement('div');
       tray.style.width = '100vw';
       tray.style.height = '100vh';
-      tray.style.background = '#eee';
+      tray.style.background = '#f0f0f0';
       tray.style.display = 'flex';
       tray.style.flexDirection = 'column';
       tray.style.alignItems = 'center';
@@ -244,7 +249,7 @@
           const doneBtn = document.createElement('button');
           doneBtn.className = 'btn';
           doneBtn.textContent = '다 먹었어요 😋';
-          doneBtn.onclick = () => alert('냠냠~ 기내식 최고였다!');
+          doneBtn.onclick = () => location.reload();
           tray.appendChild(doneBtn);
         }
       }, 800);
@@ -252,9 +257,11 @@
 
     sneezeBtn.onclick = sneeze;
     smile.onclick = sneeze;
-    document.body.onkeydown = (e) => { if (e.code === 'Space') sneeze(); };
+    document.body.onkeydown = (e) => {
+      if (e.code === 'Space') sneeze();
+    };
     hawaiiBtn.onclick = goToHawaii;
-    coldBtn.onclick = goToAntarctica;
+    coldBtn.onclick = () => alert('남극은 다음에~🐧');
   </script>
 </body>
 </html>
