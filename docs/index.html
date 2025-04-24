@@ -141,7 +141,6 @@
       to { transform: rotate(10deg); }
     }
 
-    /* 비행기 애니메이션 */
     .airplane {
       position: absolute;
       top: 50%;
@@ -155,27 +154,26 @@
       transform: translateX(100vw);
     }
 
-    /* 비행기 내부 */
     .airplane-inside {
       position: fixed;
       top: 0;
       left: 0;
       width: 100vw;
       height: 100vh;
-      background-color: white; /* 배경을 하얀색으로 설정 */
+      background-color: white;
       display: flex;
       justify-content: center;
       align-items: center;
       z-index: 1500;
-      overflow: hidden; /* 나머지 부분 숨기기 */
+      overflow: hidden;
     }
 
     .airplane-inside .window {
       position: relative;
       width: 70%;
       height: 70%;
-      border-radius: 30px; /* 둥근 사각형 */
-      background: rgba(255, 255, 255, 0.8); /* 배경 흰색 */
+      border-radius: 30px;
+      background: rgba(255, 255, 255, 0.8);
       overflow: hidden;
       box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
     }
@@ -200,6 +198,47 @@
     .hidden {
       display: none;
     }
+
+    /* 게임용 스타일 */
+    .game-area {
+      margin-top: 30px;
+    }
+
+    .game-message {
+      font-size: 2rem;
+      margin-top: 30px;
+      color: #333;
+    }
+
+    .snowball {
+      width: 50px;
+      height: 50px;
+      background-color: #fff;
+      border-radius: 50%;
+      position: absolute;
+      cursor: pointer;
+      transition: transform 0.2s ease;
+    }
+
+    .palm-tree {
+      font-size: 8rem;
+      position: relative;
+      cursor: pointer;
+    }
+
+    .coconut {
+      font-size: 2rem;
+      position: absolute;
+      top: -50px;
+      left: 30px;
+      opacity: 0;
+      transition: top 0.3s, opacity 0.5s ease-in;
+    }
+
+    .coconut.show {
+      opacity: 1;
+      top: 100px;
+    }
   </style>
 </head>
 <body>
@@ -218,12 +257,13 @@
   <script>
     let sneezeCount = 0;
     let sneezeStartTime = null;
-    let hawaiiModeActive = false; // 하와이 모드 활성화 여부
-    let antarcticaModeActive = false; // 남극 모드 활성화 여부
-    let virtualTime = 0; // 가상 시간
-    let flightStartTime = null; // 비행기 시작 시간
-    let flightInterval = null; // 비행 시간 경과를 위한 인터벌
+    let hawaiiModeActive = false;
+    let antarcticaModeActive = false;
+    let virtualTime = 0;
+    let flightStartTime = null;
+    let flightInterval = null;
 
+    // 재채기 함수
     function sneeze() {
       const now = Date.now();
       if (!sneezeStartTime || now - sneezeStartTime > 2000) {
@@ -232,7 +272,6 @@
       }
       sneezeCount++;
 
-      // 얼굴 반응
       const face = document.getElementById('face');
       const sneezeText = document.getElementById('sneezeText');
       const blast = document.getElementById('blast');
@@ -252,7 +291,6 @@
         blast.classList.remove('show');
       }, 1000);
 
-      // 남극 모드
       if (sneezeCount >= 10 && (now - sneezeStartTime) <= 2000) {
         document.body.className = 'antarctica';
         launchSnow();
@@ -272,15 +310,15 @@
       }
     }
 
+    // 하와이로 이동
     function goToHawaii() {
-      if (hawaiiModeActive) return; // 이미 하와이 모드가 활성화되었으면 더 이상 생성하지 않음
+      if (hawaiiModeActive) return;
       hawaiiModeActive = true;
-      virtualTime = 0; // 가상 시간 초기화
+      virtualTime = 0;
 
-      // 비행기 내부와 창문 추가
       document.getElementById('sneezeButton').classList.add('hidden');
       document.getElementById('hawaiiButton').classList.add('hidden');
-      document.getElementById('coldButton').classList.add('hidden'); // "추워!" 버튼 숨기기
+      document.getElementById('coldButton').classList.add('hidden');
 
       const airplaneInside = document.createElement('div');
       airplaneInside.className = 'airplane-inside';
@@ -290,72 +328,79 @@
       airplaneInside.appendChild(window);
       document.body.appendChild(airplaneInside);
 
-      // 비행기 애니메이션
       const airplane = document.createElement('div');
       airplane.className = 'airplane';
       airplane.textContent = '✈️';
       document.body.appendChild(airplane);
 
-      // 비행기 날리기
       setTimeout(() => {
         airplane.classList.add('fly');
-      }, 50);
+        setInterval(() => {
+          virtualTime += 10;
+          document.querySelector('.flight-status').textContent = `${virtualTime}s 가상 비행 중...`;
+        }, 1000);
 
-      // 비행기 씬
-      const flightStatus = document.createElement('div');
-      flightStatus.className = 'flight-status';
-      flightStatus.textContent = '비행 중...';
-      document.body.appendChild(flightStatus);
-
-      // 가상 시간 증가 인터벌
-      flightInterval = setInterval(() => {
-        virtualTime += 10; // 가상 시간 10초씩 증가
-        const hours = Math.floor(virtualTime / 3600);
-        const minutes = Math.floor((virtualTime % 3600) / 60);
-        const seconds = virtualTime % 60;
-        flightStatus.textContent = `비행 중... ${hours}시간 ${minutes}분 ${seconds}초 경과`;
-      }, 100); // 1초마다 10초씩 가상 시간 경과
-
-      // 비행기 씬 끝나고 하와이 모드로 전환
-      setTimeout(() => {
-        airplane.remove(); // 비행기 애니메이션 끝나면 제거
-        airplaneInside.style.opacity = '0'; // 비행기 내부 씬 제거
-        setTimeout(() => airplaneInside.remove(), 1000);
-
-        document.body.className = 'hawaii';
-        const flower = document.createElement('div');
-        flower.className = 'sunflower';
-        flower.textContent = '🌻🌺🌴';
-        document.body.appendChild(flower);
-
-        // 하와이 모드 종료 후 버튼 다시 보이게
         setTimeout(() => {
-          flower.remove();
-          document.body.className = '';
-          hawaiiModeActive = false; // 하와이 모드 비활성화
-          document.getElementById('sneezeButton').classList.remove('hidden');
-          document.getElementById('hawaiiButton').classList.remove('hidden');
-          document.getElementById('coldButton').classList.remove('hidden'); // "추워!" 버튼 다시 보이기
-          clearInterval(flightInterval); // 비행 인터벌 종료
-        }, 4000); // 4초 후 하와이 모드 종료
-      }, 5000); // 5초 후 하와이 모드 전환
+          document.body.className = 'hawaii';
+          airplaneInside.remove();
+          showHawaiiGame();
+        }, 5000);
+      }, 1000);
     }
 
-    function goToAntarctica() {
-      if (antarcticaModeActive) return; // 이미 남극 모드가 활성화되었으면 더 이상 생성하지 않음
-      antarcticaModeActive = true;
+    function showHawaiiGame() {
+      const gameArea = document.createElement('div');
+      gameArea.className = 'game-area';
+      gameArea.innerHTML = `<div class="game-message">코코넛 따기!! 🥥</div><div class="palm-tree" id="palmTree">🌴</div><div class="coconut" id="coconut">🥥</div>`;
+      document.body.appendChild(gameArea);
 
-      // 남극 모드 활성화
-      document.body.className = 'antarctica';
-      launchSnow();
-      const penguin = document.getElementById('penguin');
-      penguin.style.display = 'block';
+      const palmTree = document.getElementById('palmTree');
+      const coconut = document.getElementById('coconut');
+
+      palmTree.addEventListener('mousedown', () => {
+        coconut.style.top = '100px';
+        coconut.style.opacity = '1';
+      });
 
       setTimeout(() => {
-        document.body.className = '';
+        document.body.innerHTML += '<div class="game-message">코코넛 마시기 타임 🥥</div>';
+      }, 3000);
+    }
+
+    // 남극으로 이동
+    function goToAntarctica() {
+      if (antarcticaModeActive) return;
+      antarcticaModeActive = true;
+
+      document.getElementById('sneezeButton').classList.add('hidden');
+      document.getElementById('hawaiiButton').classList.add('hidden');
+      document.getElementById('coldButton').classList.add('hidden');
+
+      launchPenguin();
+      setTimeout(() => {
+        document.body.className = 'antarctica';
+        showSnowballGame();
+      }, 1000);
+    }
+
+    function launchPenguin() {
+      const penguin = document.getElementById('penguin');
+      penguin.style.display = 'block';
+      setTimeout(() => {
         penguin.style.display = 'none';
-        antarcticaModeActive = false;
-      }, 3000); // 3초 후 남극 모드 종료
+      }, 2000);
+    }
+
+    function showSnowballGame() {
+      const gameArea = document.createElement('div');
+      gameArea.className = 'game-area';
+      gameArea.innerHTML = '<div class="game-message">눈 굴리기! ❄️</div><div class="snowball" id="snowball"></div>';
+      document.body.appendChild(gameArea);
+
+      const snowball = document.getElementById('snowball');
+      snowball.addEventListener('mousedown', () => {
+        snowball.style.transform = 'translateY(50px)';
+      });
     }
   </script>
 </body>
