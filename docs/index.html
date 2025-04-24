@@ -1,0 +1,433 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8" />
+    <title>콧물 찔끔! 재채기 요정 🤧✨</title>
+    <style>
+        body {
+            text-align: center;
+            background: #fffbe0;
+            font-family: 'Segoe UI', 'Malgun Gothic', sans-serif;
+            padding-top: 80px;
+            transition: background 1s;
+            overflow-x: hidden;
+        }
+
+        body.antarctica {
+            background: #d0f0ff;
+        }
+
+        body.hawaii {
+            background: linear-gradient(to top, #ffe57f, #ffcc80);
+        }
+
+        .face {
+            font-size: 10rem;
+            transition: transform 0.2s;
+        }
+
+        .face.sneeze {
+            transform: scale(1.2) rotate(-10deg);
+        }
+
+        .sneeze-text {
+            font-size: 3rem;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            color: #ff4d4d;
+            margin-top: 30px;
+        }
+
+        .sneeze-text.show {
+            opacity: 1;
+        }
+
+        .blast {
+            font-size: 4rem;
+            color: #66ccff;
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+            margin-top: 20px;
+            opacity: 0;
+            transition: all 0.3s ease;
+        }
+
+        .blast.show {
+            opacity: 1;
+            transform: translate(-50%, -50px) scale(1.5);
+        }
+
+        button {
+            font-size: 1.2rem;
+            padding: 12px 20px;
+            border-radius: 10px;
+            margin: 15px 10px;
+            border: none;
+            cursor: pointer;
+            background: #ffd6d6;
+            box-shadow: 2px 2px 8px rgba(0,0,0,0.1);
+            font-family: 'Segoe UI', 'Malgun Gothic', sans-serif;
+            transition: background-color 0.3s ease;
+        }
+
+        button:hover {
+            background-color: #ffb3b3;
+        }
+
+        #sneezeButton {
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+            100% { transform: scale(1); }
+        }
+
+        .antarctica-text, .hawaii-text, .temp-text, .allergy-text {
+            font-size: 1.5rem;
+            margin-top: 30px;
+            display: none;
+            font-family: 'Segoe UI', 'Malgun Gothic', sans-serif;
+        }
+
+        .antarctica .antarctica-text {
+            display: block;
+            color: #0077b6;
+        }
+
+        .hawaii .hawaii-text {
+            display: block;
+            color: #ff6f00;
+        }
+
+        .temp-text {
+            color: #222;
+        }
+
+        .cold .temp-text {
+            color: #0050ef;
+        }
+
+        .hot .temp-text {
+            color: #ff5e57;
+        }
+
+        .allergy-text {
+            color: #888;
+        }
+
+        .allergy-high .allergy-text {
+            color: #ff8800;
+        }
+
+        .snowflake {
+            position: fixed;
+            top: -50px;
+            font-size: 2rem;
+            animation: fall 3s linear infinite;
+            pointer-events: none;
+            color: #cceeff;
+            z-index: 1000;
+        }
+
+        @keyframes fall {
+            0% { transform: translateY(-50px) rotate(0deg); opacity: 1; }
+            100% { transform: translateY(100vh) rotate(360deg); opacity: 0; }
+        }
+
+        .penguin {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            font-size: 4rem;
+            display: none;
+        }
+
+        .antarctica .penguin {
+            display: block;
+        }
+
+        .bubble {
+            position: absolute;
+            bottom: 100px;
+            right: 80px;
+            background: #ffffff;
+            padding: 10px 15px;
+            border-radius: 20px;
+            border: 2px solid #0077b6;
+            font-size: 1rem;
+            color: #0077b6;
+            white-space: nowrap;
+            animation: pop 0.5s ease;
+            font-family: 'Segoe UI', 'Malgun Gothic', sans-serif;
+        }
+
+        @keyframes pop {
+            from { transform: scale(0); opacity: 0; }
+            to { transform: scale(1); opacity: 1; }
+        }
+
+        .sunflower {
+            font-size: 3rem;
+            animation: swing 1.5s infinite alternate ease-in-out;
+        }
+
+        @keyframes swing {
+            from { transform: rotate(-10deg); }
+            to { transform: rotate(10deg); }
+        }
+
+        .airplane {
+            position: absolute;
+            top: 50%;
+            left: -100px;
+            font-size: 4rem;
+            z-index: 2000;
+            transition: transform 5s ease-in-out;
+        }
+
+        .airplane.fly {
+            transform: translateX(100vw);
+        }
+
+        .airplane-inside {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background-color: #87ceeb;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1500;
+            overflow: hidden;
+        }
+
+        .airplane-inside .window {
+            position: relative;
+            width: 70%;
+            height: 70%;
+            border-radius: 30px;
+            background: rgba(255, 255, 255, 0.7);
+            overflow: hidden;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+        }
+
+        .airplane-inside .window img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        #sneezeCount {
+            position: fixed;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 2rem;
+            color: #ff6f61;
+            z-index: 1000;
+            font-family: 'Arial', sans-serif;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+        }
+
+    </style>
+</head>
+<body>
+    <div id="allergySettings">
+        <label for="allergyLevel">알레르기 정도 설정:</label>
+        <select id="allergyLevel">
+            <option value="낮음">낮음</option>
+            <option value="보통">보통</option>
+            <option value="심함">심함</option>
+        </select>
+    </div>
+
+    <div class="face" id="face">😊</div>
+    <div class="blast" id="blast">💨</div>
+    <div class="sneeze-text" id="sneezeText">에에에엣취!!</div>
+    <button id="sneezeButton" onclick="sneeze()">재채기 발사! 🤧</button>
+    <button id="hawaiiButton" onclick="goToHawaii()">따뜻한 코코넛 맛보기 🌴🍹</button>
+    <button id="coldButton" onclick="goToAntarctica()">펭귄이랑 아이스 댄스! 🐧🧊</button>
+    <div id="sneezeCount">재채기 횟수: 0</div>
+
+    <div class="antarctica-text">남극에서 펭귄 털옷 득템! ...은 농담 😉❄️</div>
+    <div class="hawaii-text">하와이 햇살 아래 콧물 건조 중... ☀️😎</div>
+    <div class="temp-text" id="tempText">현재 온도: 20°C (쾌적)</div>
+    <div class="allergy-text" id="allergyText">알레르기 정도: 낮음</div>
+
+    <div class="penguin" id="penguin">🐧<div class="bubble">에취! 조심하라구!</div></div>
+
+    <script>
+        let sneezeCount = 0;
+        let sneezeStartTime = null;
+        let hawaiiModeActive = false;
+        let antarcticaModeActive = false;
+        let temperature = 20;
+        const tempTextElement = document.getElementById('tempText');
+        const allergyTextElement = document.getElementById('allergyText');
+        const body = document.body;
+        const sneezeCountElement = document.getElementById('sneezeCount'); // Corrected variable name
+        const sneezeButtonElement = document.getElementById('sneezeButton');
+        const hawaiiButtonElement = document.getElementById('hawaiiButton');
+        const coldButtonElement = document.getElementById('coldButton');
+
+
+        const sneezeSounds = [
+            "에에엣취!",
+            "에취에취!",
+            "아치슈우!",
+            "커헉! 에취!",
+            "에…엣…취! (간지러워!)",
+            "푸하-엣취!",
+            "으흠-엣취!",
+            "에잇-취!",
+            "에취! 쿨럭!",
+            "에헤-엣취!"
+        ];
+
+        const faceElement = document.getElementById('face');
+        const sneezeTextElement = document.getElementById('sneezeText');
+        const blastElement = document.getElementById('blast');
+        const allergyLevelSelect = document.getElementById('allergyLevel');
+
+        allergyLevelSelect.addEventListener('change', (event) => {
+            allergyLevel = event.target.value;
+            allergyTextElement.textContent = `알레르기 정도: ${allergyLevel}`;
+            allergyTextElement.className = 'allergy-text';
+            if (allergyLevel === '심함') {
+                allergyTextElement.classList.add('allergy-high');
+            }
+        });
+
+        function sneeze() {
+            const now = Date.now();
+            if (!sneezeStartTime || now - sneezeStartTime > 2000) {
+                sneeStartTime = now;
+                sneeCount = 0;
+            }
+            sneeCount++;
+            sneezeCountElement.textContent = `재채기 횟수: ${sneeCount}`; // Use corrected variable name
+
+            const randomSneezeSound = sneezeSounds[Math.floor(Math.random() * sneezeSounds.length)];
+            sneezeTextElement.textContent = randomSneezeSound;
+            sneezeTextElement.classList.add('show');
+            blastElement.classList.add('show');
+
+            faceElement.textContent = '🤧';
+            faceElement.classList.add('sneeze');
+
+            setTimeout(() => {
+                faceElement.textContent = '😊';
+                faceElement.classList.remove('sneeze');
+                sneezeTextElement.classList.remove('show');
+                blastElement.classList.remove('show');
+            }, 1000);
+
+            if (sneeCount >= 10 && (now - sneezeStartTime) <= 2000) {
+                goToAntarctica();
+            }
+        }
+
+        function launchSnow() {
+            for (let i = 0; i < 30; i++) {
+                const snow = document.createElement('div');
+                snow.className = 'snowflake';
+                snow.textContent = '❄️';
+                snow.style.left = Math.random() * 100 + 'vw';
+                snow.style.animationDuration = (2 + Math.random() * 2) + 's';
+                document.body.appendChild(snow);
+                setTimeout(() => snow.remove(), 4000);
+            }
+        }
+
+        function goToHawaii() {
+            if (hawaiiModeActive) return;
+            hawaiiModeActive = true;
+
+            sneezeButtonElement.classList.add('hidden');
+            hawaiiButtonElement.classList.add('hidden');
+            coldButtonElement.classList.add('hidden');
+
+            const airplaneInside = document.createElement('div');
+            airplaneInside.className = 'airplane-inside';
+            const window = document.createElement('div');
+            window.className = 'window';
+            window.innerHTML = '<img src="sky.jpeg" alt="창문 밖 풍경" style="width: 100%; height: 100%; object-fit: cover;">';
+            airplaneInside.appendChild(window);
+            document.body.appendChild(airplaneInside);
+
+            const airplane = document.createElement('div');
+            airplane.className = 'airplane';
+            airplane.textContent = '✈️';
+            document.body.appendChild(airplane);
+
+            setTimeout(() => {
+                airplane.classList.add('fly');
+            }, 50);
+
+            setTimeout(() => {
+                airplane.remove();
+                airplaneInside.style.opacity = '0';
+                setTimeout(() => airplaneInside.remove(), 1000);
+
+                body.className = 'hawaii';
+                const flower = document.createElement('div');
+                flower.className = 'sunflower';
+                flower.textContent = '🌻🌺🌴';
+                document.body.appendChild(flower);
+
+                setTimeout(() => {
+                    flower.remove();
+                    body.className = '';
+                    hawaiiModeActive = false;
+                    sneezeButtonElement.classList.remove('hidden');
+                    hawaiiButtonElement.classList.remove('hidden');
+                    coldButtonElement.classList.remove('hidden');
+                }, 4000);
+            }, 5000);
+        }
+
+        function goToAntarctica() {
+            if (antarcticaModeActive) return;
+            antarcticaModeActive = true;
+
+            body.className = 'antarctica';
+            launchSnow();
+            const penguin = document.getElementById('penguin');
+            penguin.style.display = 'block';
+
+            setTimeout(() => {
+                body.className = '';
+                penguin.style.display = 'none';
+                antarcticaModeActive = false;
+            }, 5000);
+        }
+
+        function updateTemperature() {
+            temperature += Math.floor(Math.random() * 10) - 5;
+            tempTextElement.textContent = `현재 온도: ${temperature}°C`;
+            tempTextElement.className = 'temp-text';
+            if (temperature < 10) {
+                body.classList.add('cold');
+                body.classList.remove('hot');
+            } else if (temperature > 30) {
+                body.classList.add('hot');
+                body.classList.remove('cold');
+            } else {
+                body.classList.remove('cold');
+                body.classList.remove('hot');
+            }
+        }
+
+        setInterval(updateTemperature, 5000);
+    </script>
+</body>
+</html>
