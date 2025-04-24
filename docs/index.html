@@ -55,8 +55,10 @@
 
         .blast.show {
             opacity: 1;
-            transform: translate(-50%, -50px) scale(1.5);
+            transform: translate(-50%, -100px) scale(2) rotate(10deg);
+            transition: all 0.5s ease;
         }
+
 
         button {
             font-size: 1.2rem;
@@ -310,9 +312,35 @@
         function sneeze() {
             const now = Date.now();
             if (!sneezeStartTime || now - sneezeStartTime > 2000) {
-                sneeStartTime = now;
-                sneeCount = 0;
+                sneezeStartTime = now; // 오타 수정
+                sneezeCount = 0; // 오타 수정
             }
+            sneezeCount++;
+            sneezeCountElement.textContent = `재채기 횟수: ${sneezeCount}`;
+        
+            const randomSneezeSound = sneezeSounds[Math.floor(Math.random() * sneezeSounds.length)];
+            sneezeTextElement.textContent = randomSneezeSound;
+            sneezeTextElement.classList.add('show');
+            blastElement.classList.add('show');
+        
+            const sneezeAudio = new Audio('sneeze.mp3'); // mp3 파일을 프로젝트에 넣어줘
+            sneezeAudio.play();
+        
+            faceElement.textContent = '🤧';
+            faceElement.classList.add('sneeze');
+        
+            setTimeout(() => {
+                faceElement.textContent = '😊';
+                faceElement.classList.remove('sneeze');
+                sneezeTextElement.classList.remove('show');
+                blastElement.classList.remove('show');
+            }, 1000);
+        
+            if (sneezeCount >= 10 && (now - sneezeStartTime) <= 2000) {
+                goToAntarctica();
+            }
+        }
+
             sneeCount++;
             sneezeCountElement.textContent = `재채기 횟수: ${sneeCount}`; // Use corrected variable name
 
