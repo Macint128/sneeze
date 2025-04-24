@@ -238,24 +238,6 @@
             text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
         }
 
-        /* 하와이 액티비티 */
-        .hawaii-activity {
-            font-size: 1.5rem;
-            margin-top: 30px;
-            font-family: 'Segoe UI', 'Malgun Gothic', sans-serif;
-        }
-
-        /* 액티비티 UI */
-        .activity-text {
-            font-size: 1.8rem;
-            font-family: 'Segoe UI', 'Malgun Gothic', sans-serif;
-            margin-top: 20px;
-        }
-
-        .activity-item {
-            font-size: 1.5rem;
-            margin-top: 15px;
-        }
     </style>
 </head>
 <body>
@@ -283,22 +265,6 @@
 
     <div class="penguin" id="penguin">🐧<div class="bubble">에취! 조심하라구!</div></div>
 
-    <!-- 하와이 액티비티 -->
-    <div id="hawaiiActivities" class="hidden">
-        <div class="activity-text">하와이에서 할 수 있는 액티비티:</div>
-        <div class="activity-item"><button onclick="shakeCoconut()">🥥 코코넛 흔들기</button></div>
-        <div class="activity-item"><button onclick="playUkulele()">🎶 우쿨렐레 연주</button></div>
-        <div class="activity-item"><button onclick="exitHawaii()">🏝 하와이 떠나기</button></div>
-    </div>
-
-    <!-- 남극 액티비티 -->
-    <div id="antarcticaActivities" class="hidden">
-        <div class="activity-text">남극에서 할 수 있는 액티비티:</div>
-        <div class="activity-item"><button onclick="snowballFight()">❄️ 눈싸움 시작</button></div>
-        <div class="activity-item"><button onclick="rollSnow()">⛄ 눈 굴리기</button></div>
-        <div class="activity-item"><button onclick="exitAntarctica()">🐧 남극 탈출하기</button></div>
-    </div>
-
     <script>
         let sneezeCount = 0;
         let sneezeStartTime = null;
@@ -308,46 +274,39 @@
         const tempTextElement = document.getElementById('tempText');
         const allergyTextElement = document.getElementById('allergyText');
         const body = document.body;
-        const sneezeCountElement = document.getElementById('sneezeCount');
+        const sneezeCountElement = document.getElementById('sneezeCount'); // Corrected variable name
         const sneezeButtonElement = document.getElementById('sneezeButton');
         const hawaiiButtonElement = document.getElementById('hawaiiButton');
         const coldButtonElement = document.getElementById('coldButton');
 
-        // 하와이 액티비티
-        function shakeCoconut() {
-            alert("코코넛이 떨어졌어요! 콧물 회복 +10");
-        }
 
-        function playUkulele() {
-            alert("우쿨렐레 연주 중... 하와이 느낌!");
-        }
+        const sneezeSounds = [
+            "에에엣취!",
+            "에취에취!",
+            "아치슈우!",
+            "커헉! 에취!",
+            "에…엣…취! (간지러워!)",
+            "푸하-엣취!",
+            "으흠-엣취!",
+            "에잇-취!",
+            "에취! 쿨럭!",
+            "에헤-엣취!"
+        ];
 
-        function exitHawaii() {
-            hawaiiModeActive = false;
-            body.classList.remove('hawaii');
-            document.getElementById('hawaiiActivities').classList.add('hidden');
-            hawaiiButtonElement.classList.remove('hidden');
-            coldButtonElement.classList.remove('hidden');
-        }
+        const faceElement = document.getElementById('face');
+        const sneezeTextElement = document.getElementById('sneezeText');
+        const blastElement = document.getElementById('blast');
+        const allergyLevelSelect = document.getElementById('allergyLevel');
 
-        // 남극 액티비티
-        function snowballFight() {
-            alert("펭귄과 눈싸움 시작!");
-        }
+        allergyLevelSelect.addEventListener('change', (event) => {
+            allergyLevel = event.target.value;
+            allergyTextElement.textContent = `알레르기 정도: ${allergyLevel}`;
+            allergyTextElement.className = 'allergy-text';
+            if (allergyLevel === '심함') {
+                allergyTextElement.classList.add('allergy-high');
+            }
+        });
 
-        function rollSnow() {
-            alert("눈덩이를 굴려서 눈사람 만들기!");
-        }
-
-        function exitAntarctica() {
-            antarcticaModeActive = false;
-            body.classList.remove('antarctica');
-            document.getElementById('antarcticaActivities').classList.add('hidden');
-            hawaiiButtonElement.classList.remove('hidden');
-            coldButtonElement.classList.remove('hidden');
-        }
-
-        // 재채기 관련 코드
         function sneeze() {
             const now = Date.now();
             if (!sneezeStartTime || now - sneezeStartTime > 2000) {
@@ -355,47 +314,110 @@
                 sneezeCount = 0;
             }
             sneezeCount++;
-            sneezeCountElement.textContent = `재채기 횟수: ${sneezeCount}`;
+            sneezeCountElement.textContent = `재채기 횟수: ${sneezeCount}`; // Use corrected variable name
 
-            const randomSneezeSound = "에에에엣취!!";
-            document.getElementById('sneezeText').textContent = randomSneezeSound;
-            document.getElementById('sneezeText').classList.add('show');
-            document.getElementById('blast').classList.add('show');
+            const randomSneezeSound = sneezeSounds[Math.floor(Math.random() * sneezeSounds.length)];
+            sneezeTextElement.textContent = randomSneezeSound;
+            sneezeTextElement.classList.add('show');
+            blastElement.classList.add('show');
 
-            document.getElementById('face').textContent = '🤧';
-            document.getElementById('face').classList.add('sneeze');
+            faceElement.textContent = '🤧';
+            faceElement.classList.add('sneeze');
 
             setTimeout(() => {
-                document.getElementById('face').textContent = '😊';
-                document.getElementById('face').classList.remove('sneeze');
-                document.getElementById('sneezeText').classList.remove('show');
-                document.getElementById('blast').classList.remove('show');
-            }, 1500);
+                faceElement.textContent = '😊';
+                faceElement.classList.remove('sneeze');
+                sneezeTextElement.classList.remove('show');
+                blastElement.classList.remove('show');
+            }, 1000);
+
+            if (sneezeCount >= 10 && (now - sneezeStartTime) <= 2000) {
+                goToAntarctica();
+            }
         }
 
-        // 하와이, 남극 모드 전환
+        function launchSnow() {
+            for (let i = 0; i < 30; i++) {
+                const snow = document.createElement('div');
+                snow.className = 'snowflake';
+                snow.textContent = '❄️';
+                snow.style.left = Math.random() * 100 + 'vw';
+                snow.style.animationDuration = (2 + Math.random() * 2) + 's';
+                document.body.appendChild(snow);
+                setTimeout(() => snow.remove(), 4000);
+            }
+        }
+
         function goToHawaii() {
+            if (hawaiiModeActive) return;
             hawaiiModeActive = true;
-            body.classList.add('hawaii');
-            document.getElementById('hawaiiActivities').classList.remove('hidden');
+
+            sneezeButtonElement.classList.add('hidden');
             hawaiiButtonElement.classList.add('hidden');
             coldButtonElement.classList.add('hidden');
+
+            const airplaneInside = document.createElement('div');
+            airplaneInside.className = 'airplane-inside';
+            const window = document.createElement('div');
+            window.className = 'window';
+            window.innerHTML = '<img src="sky.jpeg" alt="창문 밖 풍경" style="width: 100%; height: 100%; object-fit: cover;">';
+            airplaneInside.appendChild(window);
+            document.body.appendChild(airplaneInside);
+
+            const airplane = document.createElement('div');
+            airplane.className = 'airplane';
+            airplane.textContent = '✈️';
+            document.body.appendChild(airplane);
+
+            setTimeout(() => {
+                airplane.classList.add('fly');
+            }, 50);
+
+            setTimeout(() => {
+                airplane.remove();
+                airplaneInside.style.opacity = '0';
+                setTimeout(() => airplaneInside.remove(), 1000);
+
+                body.className = 'hawaii';
+                const flower = document.createElement('div');
+                flower.className = 'sunflower';
+                flower.textContent = '🌺';
+                document.body.appendChild(flower);
+                flower.style.animationDuration = '3s';
+
+                const hawaiiText = document.createElement('div');
+                hawaiiText.className = 'hawaii-text';
+                hawaiiText.textContent = '하와이 도착!';
+                document.body.appendChild(hawaiiText);
+
+                setTimeout(() => {
+                    hawaiiText.remove();
+                    flower.remove();
+                    sneezeButtonElement.classList.remove('hidden');
+                    hawaiiButtonElement.classList.remove('hidden');
+                    coldButtonElement.classList.remove('hidden');
+                }, 2000);
+            }, 2000);
         }
 
         function goToAntarctica() {
+            if (antarcticaModeActive) return;
             antarcticaModeActive = true;
-            body.classList.add('antarctica');
-            document.getElementById('antarcticaActivities').classList.remove('hidden');
+
+            sneezeButtonElement.classList.add('hidden');
             hawaiiButtonElement.classList.add('hidden');
             coldButtonElement.classList.add('hidden');
-        }
 
-        // 날씨, 알레르기 반영
-        const allergyLevelElement = document.getElementById('allergyLevel');
-        allergyLevelElement.addEventListener('change', function() {
-            allergyTextElement.textContent = `알레르기 정도: ${this.value}`;
-            allergyTextElement.classList.toggle('allergy-high', this.value === '심함');
-        });
+            body.className = 'antarctica';
+            document.body.appendChild(document.createElement('div')).textContent = '❄️';
+
+            launchSnow();
+
+            setTimeout(() => {
+                const penguin = document.getElementById('penguin');
+                penguin.style.display = 'block';
+            }, 1500);
+        }
     </script>
 </body>
 </html>
