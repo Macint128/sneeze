@@ -245,6 +245,17 @@
             font-family: 'Segoe UI', 'Malgun Gothic', sans-serif;
         }
 
+        /* 액티비티 UI */
+        .activity-text {
+            font-size: 1.8rem;
+            font-family: 'Segoe UI', 'Malgun Gothic', sans-serif;
+            margin-top: 20px;
+        }
+
+        .activity-item {
+            font-size: 1.5rem;
+            margin-top: 15px;
+        }
     </style>
 </head>
 <body>
@@ -274,16 +285,18 @@
 
     <!-- 하와이 액티비티 -->
     <div id="hawaiiActivities" class="hidden">
-        <button onclick="shakeCoconut()">🥥 코코넛 흔들기</button>
-        <button onclick="playUkulele()">🎶 우쿨렐레 연주</button>
-        <button onclick="exitHawaii()">🏝 하와이 떠나기</button>
+        <div class="activity-text">하와이에서 할 수 있는 액티비티:</div>
+        <div class="activity-item"><button onclick="shakeCoconut()">🥥 코코넛 흔들기</button></div>
+        <div class="activity-item"><button onclick="playUkulele()">🎶 우쿨렐레 연주</button></div>
+        <div class="activity-item"><button onclick="exitHawaii()">🏝 하와이 떠나기</button></div>
     </div>
 
     <!-- 남극 액티비티 -->
     <div id="antarcticaActivities" class="hidden">
-        <button onclick="snowballFight()">❄️ 눈싸움 시작</button>
-        <button onclick="rollSnow()">⛄ 눈 굴리기</button>
-        <button onclick="exitAntarctica()">🐧 남극 탈출하기</button>
+        <div class="activity-text">남극에서 할 수 있는 액티비티:</div>
+        <div class="activity-item"><button onclick="snowballFight()">❄️ 눈싸움 시작</button></div>
+        <div class="activity-item"><button onclick="rollSnow()">⛄ 눈 굴리기</button></div>
+        <div class="activity-item"><button onclick="exitAntarctica()">🐧 남극 탈출하기</button></div>
     </div>
 
     <script>
@@ -344,19 +357,19 @@
             sneezeCount++;
             sneezeCountElement.textContent = `재채기 횟수: ${sneezeCount}`;
 
-            const randomSneezeSound = sneezeSounds[Math.floor(Math.random() * sneezeSounds.length)];
-            sneezeTextElement.textContent = randomSneezeSound;
-            sneezeTextElement.classList.add('show');
-            blastElement.classList.add('show');
+            const randomSneezeSound = "에에에엣취!!";
+            document.getElementById('sneezeText').textContent = randomSneezeSound;
+            document.getElementById('sneezeText').classList.add('show');
+            document.getElementById('blast').classList.add('show');
 
-            faceElement.textContent = '🤧';
-            faceElement.classList.add('sneeze');
+            document.getElementById('face').textContent = '🤧';
+            document.getElementById('face').classList.add('sneeze');
 
             setTimeout(() => {
-                faceElement.textContent = '😊';
-                faceElement.classList.remove('sneeze');
-                sneezeTextElement.classList.remove('show');
-                blastElement.classList.remove('show');
+                document.getElementById('face').textContent = '😊';
+                document.getElementById('face').classList.remove('sneeze');
+                document.getElementById('sneezeText').classList.remove('show');
+                document.getElementById('blast').classList.remove('show');
             }, 1500);
         }
 
