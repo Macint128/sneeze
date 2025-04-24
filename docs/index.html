@@ -186,6 +186,17 @@
       object-fit: cover;
     }
 
+    .flight-status {
+      position: absolute;
+      bottom: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      font-size: 1.5rem;
+      color: #ff6f00;
+      font-weight: bold;
+      z-index: 2001;
+    }
+
     .hidden {
       display: none;
     }
@@ -209,6 +220,9 @@
     let sneezeStartTime = null;
     let hawaiiModeActive = false; // 하와이 모드 활성화 여부
     let antarcticaModeActive = false; // 남극 모드 활성화 여부
+    let virtualTime = 0; // 가상 시간
+    let flightStartTime = null; // 비행기 시작 시간
+    let flightInterval = null; // 비행 시간 경과를 위한 인터벌
 
     function sneeze() {
       const now = Date.now();
@@ -261,6 +275,7 @@
     function goToHawaii() {
       if (hawaiiModeActive) return; // 이미 하와이 모드가 활성화되었으면 더 이상 생성하지 않음
       hawaiiModeActive = true;
+      virtualTime = 0; // 가상 시간 초기화
 
       // 비행기 내부와 창문 추가
       document.getElementById('sneezeButton').classList.add('hidden');
@@ -286,6 +301,21 @@
         airplane.classList.add('fly');
       }, 50);
 
+      // 비행기 씬
+      const flightStatus = document.createElement('div');
+      flightStatus.className = 'flight-status';
+      flightStatus.textContent = '비행 중...';
+      document.body.appendChild(flightStatus);
+
+      // 가상 시간 증가 인터벌
+      flightInterval = setInterval(() => {
+        virtualTime += 10; // 가상 시간 10초씩 증가
+        const hours = Math.floor(virtualTime / 3600);
+        const minutes = Math.floor((virtualTime % 3600) / 60);
+        const seconds = virtualTime % 60;
+        flightStatus.textContent = `비행 중... ${hours}시간 ${minutes}분 ${seconds}초 경과`;
+      }, 100); // 1초마다 10초씩 가상 시간 경과
+
       // 비행기 씬 끝나고 하와이 모드로 전환
       setTimeout(() => {
         airplane.remove(); // 비행기 애니메이션 끝나면 제거
@@ -306,6 +336,7 @@
           document.getElementById('sneezeButton').classList.remove('hidden');
           document.getElementById('hawaiiButton').classList.remove('hidden');
           document.getElementById('coldButton').classList.remove('hidden'); // "추워!" 버튼 다시 보이기
+          clearInterval(flightInterval); // 비행 인터벌 종료
         }, 4000); // 4초 후 하와이 모드 종료
       }, 5000); // 5초 후 하와이 모드 전환
     }
@@ -324,16 +355,8 @@
         document.body.className = '';
         penguin.style.display = 'none';
         antarcticaModeActive = false;
-      }, 5000); // 5초 후 남극 모드 종료
+      }, 3000); // 3초 후 남극 모드 종료
     }
-
-    // 스페이스바로 재채기
-    document.addEventListener('keydown', function (e) {
-      if (e.code === 'Space') {
-        sneeze();
-        e.preventDefault();
-      }
-    });
   </script>
 </body>
 </html>
