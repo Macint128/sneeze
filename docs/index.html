@@ -4,6 +4,7 @@
     <meta charset="UTF-8" />
     <title>콧물 찔끔! 재채기 요정 🤧✨</title>
     <style>
+        /* 기본 스타일 */
         body {
             text-align: center;
             background: #fffbe0;
@@ -252,6 +253,63 @@
             animation: pop 0.5s ease;
         }
 
+        /* 모바일에서의 스타일 (화면 너비 768px 이하) */
+        @media screen and (max-width: 768px) {
+            .face {
+                font-size: 6rem;
+            }
+
+            .sneeze-text {
+                font-size: 2rem;
+            }
+
+            button {
+                font-size: 1rem;
+                padding: 10px 15px;
+            }
+
+            .temp-text, .allergy-text {
+                font-size: 1rem;
+            }
+
+            #sneezeCount {
+                font-size: 1.5rem;
+            }
+
+            .inflight-meal {
+                font-size: 1rem;
+                padding: 15px 20px;
+            }
+        }
+
+        /* 데스크탑에서의 스타일 (화면 너비 1024px 이상) */
+        @media screen and (min-width: 1024px) {
+            .face {
+                font-size: 12rem;
+            }
+
+            .sneeze-text {
+                font-size: 4rem;
+            }
+
+            button {
+                font-size: 1.5rem;
+                padding: 15px 25px;
+            }
+
+            .temp-text, .allergy-text {
+                font-size: 1.5rem;
+            }
+
+            #sneezeCount {
+                font-size: 2rem;
+            }
+
+            .inflight-meal {
+                font-size: 2rem;
+                padding: 25px 40px;
+            }
+        }
     </style>
 </head>
 <body>
@@ -341,64 +399,41 @@
                 blastElement.classList.remove('show');
             }, 1000);
 
-            if (sneezeCount >= 10 && (now - sneezeStartTime) <= 2000) {
-                goToAntarctica();
-            }
-        }
-
-        function launchSnow() {
-            for (let i = 0; i < 30; i++) {
-                const snow = document.createElement('div');
-                snow.className = 'snowflake';
-                snow.textContent = '❄️';
-                snow.style.left = Math.random() * 100 + 'vw';
-                snow.style.animationDuration = (Math.random() * 2 + 1) + 's';
-                body.appendChild(snow);
-                setTimeout(() => {
-                    snow.remove();
-                }, 3000);
+            if (sneezeCount >= 10 && !hasMealBeenShown) {
+                mealButtonElement.classList.remove('hidden');
+                hasMealBeenShown = true;
             }
         }
 
         function goToHawaii() {
             hawaiiModeActive = true;
+            antarcticaModeActive = false;
             body.classList.add('hawaii');
             body.classList.remove('antarctica');
-            body.classList.remove('cold');
-            body.classList.add('hot');
-            hawaiiButtonElement.classList.add('hidden');
-            coldButtonElement.classList.add('hidden');
-            tempTextElement.textContent = "하와이의 따뜻한 열기! 🌴";
-            document.querySelector('.hawaii-text').style.display = 'block';
-            showInflightMeals();
+            tempTextElement.textContent = '현재 온도: 30°C (덥다)';
+            hawaiiButtonElement.disabled = true;
+            coldButtonElement.disabled = false;
         }
 
         function goToAntarctica() {
             antarcticaModeActive = true;
+            hawaiiModeActive = false;
             body.classList.add('antarctica');
             body.classList.remove('hawaii');
-            body.classList.remove('hot');
-            body.classList.add('cold');
-            hawaiiButtonElement.classList.add('hidden');
-            coldButtonElement.classList.add('hidden');
-            penguin.style.display = "block";
-            document.querySelector('.antarctica-text').style.display = 'block';
-            launchSnow();
+            tempTextElement.textContent = '현재 온도: -10°C (차갑다)';
+            hawaiiButtonElement.disabled = false;
+            coldButtonElement.disabled = true;
         }
 
         function showInflightMeals() {
-            if (!hasMealBeenShown) {
-                const meal = mealList[Math.floor(Math.random() * mealList.length)];
-                const mealElement = document.createElement('div');
-                mealElement.classList.add('inflight-meal');
-                mealElement.innerHTML = `<span class="meal-emoji">${meal}</span>`;
-                document.body.appendChild(mealElement);
-
-                setTimeout(() => {
-                    mealElement.remove();
-                    hasMealBeenShown = true;
-                }, 5000);
-            }
+            const randomMeal = mealList[Math.floor(Math.random() * mealList.length)];
+            const mealElement = document.createElement('div');
+            mealElement.classList.add('inflight-meal');
+            mealElement.innerHTML = `<span class="meal-emoji">🍽️</span> ${randomMeal}`;
+            document.body.appendChild(mealElement);
+            setTimeout(() => {
+                mealElement.remove();
+            }, 5000);
         }
     </script>
 </body>
