@@ -169,16 +169,6 @@
             to { transform: scale(1); opacity: 1; }
         }
 
-        .sunflower {
-            font-size: 3rem;
-            animation: swing 1.5s infinite alternate ease-in-out;
-        }
-
-        @keyframes swing {
-            from { transform: rotate(-10deg); }
-            to { transform: rotate(10deg); }
-        }
-
         .airplane {
             position: absolute;
             top: 50%;
@@ -252,6 +242,16 @@
             animation: pop 0.5s ease;
             z-index: 2001;
         }
+
+        .inflight-meal span {
+            font-size: 3rem;
+        }
+
+        .meal-emoji {
+            font-size: 3rem;
+            animation: pop 0.5s ease;
+        }
+
     </style>
 </head>
 <body>
@@ -270,7 +270,7 @@
     <button id="sneezeButton" onclick="sneeze()">재채기 발사! 🤧</button>
     <button id="hawaiiButton" onclick="goToHawaii()">따뜻한 코코넛 맛보기 🌴🍹</button>
     <button id="coldButton" onclick="goToAntarctica()">펭귄이랑 아이스 댄스! 🐧🧊</button>
-    <button onclick="showInflightMeals()">기내식 확인하기 🍽️</button>
+    <button onclick="showInflightMeals()" id="mealButton" class="hidden">기내식 확인하기 🍽️</button>
     <div id="sneezeCount">재채기 횟수: 0</div>
 
     <div class="antarctica-text">남극에서 펭귄 털옷 득템! ...은 농담 😉❄️</div>
@@ -282,8 +282,8 @@
 
     <script>
         const mealList = [
-            "한우 불고기 정식", "연어 스테이크", "비건 샐러드", "치킨 커리", "불닭 마요 덮밥",
-            "해산물 파스타", "된장찌개 백반", "토마토 리조또", "짜장면과 탕수육", "샌드위치 & 수프"
+            "🍗 한우 불고기 정식", "🐟 연어 스테이크", "🥗 비건 샐러드", "🍛 치킨 커리", "🍚 불닭 마요 덮밥",
+            "🍝 해산물 파스타", "🍲 된장찌개 백반", "🍅 토마토 리조또", "🍜 짜장면과 탕수육", "🥪 샌드위치 & 수프"
         ];
 
         let sneezeCount = 0;
@@ -303,6 +303,8 @@
         const blastElement = document.getElementById('blast');
         const allergyLevelSelect = document.getElementById('allergyLevel');
         const allergyLevelText = document.getElementById('allergyText');
+        const mealButtonElement = document.getElementById('mealButton');
+        let hasMealBeenShown = false;
 
         allergyLevelSelect.addEventListener('change', (event) => {
             allergyLevel = event.target.value;
@@ -385,15 +387,18 @@
         }
 
         function showInflightMeals() {
-            const meal = mealList[Math.floor(Math.random() * mealList.length)];
-            const mealElement = document.createElement('div');
-            mealElement.classList.add('inflight-meal');
-            mealElement.textContent = `오늘의 기내식: ${meal}`;
-            document.body.appendChild(mealElement);
+            if (!hasMealBeenShown) {
+                const meal = mealList[Math.floor(Math.random() * mealList.length)];
+                const mealElement = document.createElement('div');
+                mealElement.classList.add('inflight-meal');
+                mealElement.innerHTML = `<span class="meal-emoji">${meal}</span>`;
+                document.body.appendChild(mealElement);
 
-            setTimeout(() => {
-                mealElement.remove();
-            }, 5000);
+                setTimeout(() => {
+                    mealElement.remove();
+                    hasMealBeenShown = true;
+                }, 5000);
+            }
         }
     </script>
 </body>
